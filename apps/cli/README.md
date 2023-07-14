@@ -3,6 +3,7 @@
 npm i -g @bradymadden97/freephite-cli
 
 # Get a Github Access Token from https://github.com/settings/tokens
+# Use a "classic token" for now (7/14/2023)
 fp auth-fp -t <YOUR_GITHUB_ACCESS_TOKEN>
 ```
 
