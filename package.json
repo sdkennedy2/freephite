@@ -1,6 +1,5 @@
 {
-  "private": true,
-  "name": "graphite-client",
+  "name": "@bradymadden97/freephite",
   "workspaces": {
     "packages": [
       "./apps/cli",
@@ -29,5 +28,6 @@
     "ts-mocha": "^10.0.0",
     "turbo": "^1.10.7",
     "typescript": "^4.9.4"
-  }
+  },
+  "version": "0.0.3"
 }
