@@ -7,6 +7,11 @@ npm i -g @bradymadden97/freephite-cli
 fp auth-fp -t <YOUR_GITHUB_ACCESS_TOKEN>
 ```
 
+## Update the CLI
+```
+npm i -g @bradymadden97/freephite-cli@latest
+```
+
 
 ## (WIP) Develop Locally
 ```
@@ -23,4 +28,10 @@ yarn build
 
 # To test your local build
 node ~path/to/freephite/apps/cli/dist/src/index.js
+```
+
+## Publish
+```
+cd ~path/to/freephite/apps/cli
+npm publish
 ```
