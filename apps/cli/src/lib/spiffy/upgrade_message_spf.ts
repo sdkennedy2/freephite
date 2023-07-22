@@ -14,7 +14,7 @@ export const messageConfigFactory = spiffy({
   schema,
   defaultLocations: [
     {
-      relativePath: '.graphite_upgrade_message',
+      relativePath: '.freephite_upgrade_message',
       relativeTo: 'USER_HOME',
     },
   ],

@@ -1,14 +1,11 @@
-import { API_ROUTES } from '@withgraphite/graphite-cli-routes';
 import { version } from '../../package.json';
-import { requestWithArgs } from '../lib/api/request';
 import { TContextLite } from '../lib/context';
-import { composeGit } from '../lib/git/git';
 import {
   messageConfigFactory,
   TMessageConfig,
 } from '../lib/spiffy/upgrade_message_spf';
-import { userConfigFactory } from '../lib/spiffy/user_config_spf';
 import { spawnDetached } from '../lib/utils/spawn';
+import semver from 'semver';
 
 function printAndClearOldMessage(context: TContextLite): void {
   const oldMessage = context.messageConfig.data.message;
@@ -30,35 +27,25 @@ export function fetchUpgradePromptInBackground(context: TContextLite): void {
 async function fetchUpgradePrompt(
   messageConfig: TMessageConfig
 ): Promise<void> {
-  const userConfig = userConfigFactory.load();
   if (process.env.GRAPHITE_DISABLE_UPGRADE_PROMPT) {
     return;
   }
   try {
-    const user = composeGit().getUserEmail();
-    const response = await requestWithArgs(
-      userConfig,
-      API_ROUTES.upgradePrompt,
-      {},
-      {
-        user: user ?? 'NotFound',
-        currentVersion: version,
-      }
-    );
+    const response = await fetch(
+      'https://registry.npmjs.org/@bradymadden97/freephite-cli'
+    ).then((r) => r.json());
+    const latest = response['dist-tags']['latest'];
 
-    if (response._response.status == 200) {
-      if (response.prompt) {
-        const message = response.prompt.message;
-        messageConfig.update(
-          (data) =>
-            (data.message = {
-              contents: message,
-              cliVersion: version,
-            })
-        );
-      } else {
-        messageConfig.update((data) => (data.message = undefined));
-      }
+    if (semver.compare(latest, version) > 0) {
+      messageConfig.update(
+        (data) =>
+          (data.message = {
+            contents: `Current freephite version ${version} < ${latest}. To update:\nhttps://www.npmjs.com/package/@bradymadden97/freephite-cli`,
+            cliVersion: version,
+          })
+      );
+    } else {
+      messageConfig.update((data) => (data.message = undefined));
     }
   } catch (err) {
     return;
