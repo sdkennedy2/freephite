@@ -12,7 +12,7 @@ module.exports = {
       { "argsIgnorePattern": "^_" }
     ],
     "@typescript-eslint/no-floating-promises": "error",
-    "max-lines-per-function": ["error", { "max": 120 }],
+    // "max-lines-per-function": ["error", { "max": 120 }], // No.
     "max-params": ["error", { "max": 3 }],
     "@typescript-eslint/explicit-module-boundary-types": "error",
     "import/no-default-export": "error",

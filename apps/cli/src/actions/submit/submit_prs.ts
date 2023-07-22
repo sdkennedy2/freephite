@@ -113,8 +113,6 @@ async function requestServerToSubmitPRs({
           headers: { 'X-GitHub-Api-Version': '2022-11-28' },
         })
       );
-
-      // TODO: Add a comment to PR with the tree
     }
 
     if (info.action === 'update') {
@@ -132,8 +130,6 @@ async function requestServerToSubmitPRs({
           }
         )
       );
-
-      // TODO: Update comment in PR with the updated tree
     }
   }
 
