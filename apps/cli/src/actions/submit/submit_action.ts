@@ -224,6 +224,8 @@ export async function submitAction(
   }
 }
 
+const IGNORE_MESSAGES = ['Upgrade your plan to keep stacking'];
+
 export async function displayRepoMessage(context: TContext): Promise<void> {
   try {
     cliAuthPrecondition(context);
@@ -237,19 +239,25 @@ export async function displayRepoMessage(context: TContext): Promise<void> {
       }
     );
 
-    if (response._response.status !== 200 || !response.message) {
+    const { message } = response;
+    if (response._response.status !== 200 || !message) {
       return;
     }
 
-    switch (response.message.status) {
+    // Don't show the ignored messages to the user
+    if (IGNORE_MESSAGES.find((m) => message.text.includes(m))) {
+      return;
+    }
+
+    switch (message.status) {
       case 'info':
-        context.splog.info(response.message.text);
+        context.splog.info(message.text);
         break;
       case 'warning':
-        context.splog.warn(response.message.text);
+        context.splog.warn(message.text);
         break;
       case 'error':
-        context.splog.error(response.message.text);
+        context.splog.error(message.text);
         break;
     }
   } catch (e) {
