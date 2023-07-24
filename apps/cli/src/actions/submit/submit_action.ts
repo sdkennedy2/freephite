@@ -162,7 +162,7 @@ export async function submitAction(
     }
   }
 
-  const comment = StackCommentBody.generate(prs);
+  const comment = StackCommentBody.generate(context.engine.trunk, prs);
   const owner = context.repoConfig.getRepoOwner();
   const repo = context.repoConfig.getRepoName();
 
