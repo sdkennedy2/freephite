@@ -151,13 +151,13 @@ export async function submitAction(
   });
 
   const prs: Array<PR> = [];
-  for (const submissionInfo of submissionInfos) {
-    const info = context.engine.getPrInfo(submissionInfo.head);
+  for (const branchName of branchNames) {
+    const info = context.engine.getPrInfo(branchName);
     if (info?.number && info?.base) {
       prs.push({
         base: info.base,
         number: info.number,
-        ref: submissionInfo.head,
+        ref: branchName,
       });
     }
   }

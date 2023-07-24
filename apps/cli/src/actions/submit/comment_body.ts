@@ -14,7 +14,7 @@ abstract class StackCommentBodyBase {
 
     for (const pr of prs) {
       const deps = this.tree[pr.base];
-      this.tree[pr.base] = [...deps, pr];
+      this.tree[pr.base] = deps ? [...deps, pr] : [pr];
       this.tree[pr.ref] = [];
     }
 
