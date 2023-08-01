@@ -133,6 +133,8 @@ export async function submitAction(
       throw err;
     }
 
+    console.log('Finished pushing branch for ', submissionInfo);
+    console.log('Now going to submit PR');
     await submitPullRequest(
       {
         submissionInfo: [submissionInfo],
@@ -143,11 +145,9 @@ export async function submitAction(
     );
   }
 
-  console.log('Finished pushing branches ...');
-
   const auth = context.userConfig.getFPAuthToken();
   if (!auth) {
-    console.log('No auth!');
+    throw new Error('No freephite auth token found. Run `fp auth-fp -t <YOUR_GITHUB_TOKEN>` then try again.');
   }
 
   const octokit = new Octokit({ auth });
