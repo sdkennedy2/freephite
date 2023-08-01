@@ -27,7 +27,6 @@ export async function submitPullRequest(
     submissionInfo: TPRSubmissionInfo;
     mergeWhenReady: boolean;
     trunkBranchName: string;
-    cliAuthToken: string;
   },
   context: TContext
 ): Promise<void> {
@@ -91,9 +90,14 @@ async function requestServerToSubmitPRs({
   trunkBranchName: string;
   context: TContext;
 }): Promise<TSubmittedPR[]> {
-  const octokit = new Octokit({
-    auth: context.userConfig.getFPAuthToken(),
-  });
+  const auth = context.userConfig.getFPAuthToken();
+  if (!auth) {
+    throw new Error(
+      'No freephite auth token found. Run `fp auth-fp -t <YOUR_GITHUB_TOKEN>` then try again.'
+    );
+  }
+
+  const octokit = new Octokit({ auth });
 
   const owner = context.repoConfig.getRepoOwner();
   const repo = context.repoConfig.getRepoName();

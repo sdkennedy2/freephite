@@ -39,7 +39,6 @@ export async function submitAction(
     );
   }
   const populateRemoteShasPromise = context.engine.populateRemoteShas();
-  const cliAuthToken = cliAuthPrecondition(context);
   if (args.dryRun) {
     context.splog.info(
       chalk.yellow(
@@ -140,15 +139,19 @@ export async function submitAction(
         submissionInfo: [submissionInfo],
         mergeWhenReady: args.mergeWhenReady,
         trunkBranchName: context.engine.trunk,
-        cliAuthToken,
       },
       context
     );
   }
 
-  const octokit = new Octokit({
-    auth: context.userConfig.getFPAuthToken(),
-  });
+  const auth = context.userConfig.getFPAuthToken();
+  if (!auth) {
+    throw new Error(
+      'No freephite auth token found. Run `fp auth-fp -t <YOUR_GITHUB_TOKEN>` then try again.'
+    );
+  }
+
+  const octokit = new Octokit({ auth });
 
   const prs: Array<PR> = [];
   for (const branchName of branchNames) {
