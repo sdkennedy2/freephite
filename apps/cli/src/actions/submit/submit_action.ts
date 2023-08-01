@@ -133,8 +133,6 @@ export async function submitAction(
       throw err;
     }
 
-    console.log('Finished pushing branch for ', submissionInfo);
-    console.log('Now going to submit PR');
     await submitPullRequest(
       {
         submissionInfo: [submissionInfo],

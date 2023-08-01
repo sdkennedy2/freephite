@@ -47,8 +47,6 @@ export async function submitPullRequest(
     );
   }
 
-  console.log('PR Submitted', pr);
-
   context.engine.upsertPrInfo(pr.response.head, {
     number: pr.response.prNumber,
     url: pr.response.prURL,
@@ -102,9 +100,6 @@ async function requestServerToSubmitPRs({
   const owner = context.repoConfig.getRepoOwner();
   const repo = context.repoConfig.getRepoName();
 
-
-  console.log('Going to try and submit pr');
-
   const prs = [];
   for (const info of submissionInfo) {
     if (info.action === 'create') {
@@ -139,8 +134,6 @@ async function requestServerToSubmitPRs({
       );
     }
   }
-
-  console.log('Just made the requests', prs);
 
   const requests: { [head: string]: TSubmittedPRRequest } = {};
   submissionInfo.forEach((prRequest) => {
