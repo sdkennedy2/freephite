@@ -39,7 +39,6 @@ export async function submitAction(
     );
   }
   const populateRemoteShasPromise = context.engine.populateRemoteShas();
-  const cliAuthToken = cliAuthPrecondition(context);
   if (args.dryRun) {
     context.splog.info(
       chalk.yellow(
@@ -55,10 +54,9 @@ export async function submitAction(
     args.reviewers = undefined;
 
     context.splog.info(
-      `Running in non-interactive mode. Inline prompts to fill PR fields will be skipped${
-        !(args.draft || args.publish)
-          ? ' and new PRs will be created in draft mode'
-          : ''
+      `Running in non-interactive mode. Inline prompts to fill PR fields will be skipped${!(args.draft || args.publish)
+        ? ' and new PRs will be created in draft mode'
+        : ''
       }.`
     );
     context.splog.newline();
@@ -140,15 +138,19 @@ export async function submitAction(
         submissionInfo: [submissionInfo],
         mergeWhenReady: args.mergeWhenReady,
         trunkBranchName: context.engine.trunk,
-        cliAuthToken,
       },
       context
     );
   }
 
-  const octokit = new Octokit({
-    auth: context.userConfig.getFPAuthToken(),
-  });
+  console.log('Finished pushing branches ...');
+
+  const auth = context.userConfig.getFPAuthToken();
+  if (!auth) {
+    console.log('No auth!');
+  }
+
+  const octokit = new Octokit({ auth });
 
   const prs: Array<PR> = [];
   for (const branchName of branchNames) {

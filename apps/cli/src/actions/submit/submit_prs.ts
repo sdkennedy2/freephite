@@ -27,7 +27,6 @@ export async function submitPullRequest(
     submissionInfo: TPRSubmissionInfo;
     mergeWhenReady: boolean;
     trunkBranchName: string;
-    cliAuthToken: string;
   },
   context: TContext
 ): Promise<void> {
@@ -48,6 +47,8 @@ export async function submitPullRequest(
     );
   }
 
+  console.log('PR Submitted', pr);
+
   context.engine.upsertPrInfo(pr.response.head, {
     number: pr.response.prNumber,
     url: pr.response.prURL,
@@ -55,10 +56,10 @@ export async function submitPullRequest(
     state: 'OPEN', // We know this is not closed or merged because submit succeeded
     ...(pr.request.action === 'create'
       ? {
-          title: pr.request.title,
-          body: pr.request.body,
-          reviewDecision: 'REVIEW_REQUIRED', // Because we just opened this PR
-        }
+        title: pr.request.title,
+        body: pr.request.body,
+        reviewDecision: 'REVIEW_REQUIRED', // Because we just opened this PR
+      }
       : {}),
     ...(pr.request.draft !== undefined ? { draft: pr.request.draft } : {}),
   });
@@ -97,6 +98,9 @@ async function requestServerToSubmitPRs({
 
   const owner = context.repoConfig.getRepoOwner();
   const repo = context.repoConfig.getRepoName();
+
+
+  console.log('Going to try and submit pr');
 
   const prs = [];
   for (const info of submissionInfo) {

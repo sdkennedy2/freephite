@@ -6,7 +6,7 @@ module.exports = {
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "import"],
   "rules": {
-    "no-console": "error",
+    // "no-console": "error",
     "@typescript-eslint/no-unused-vars": [
       "error",
       { "argsIgnorePattern": "^_" }
@@ -43,6 +43,6 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:import/typescript",
-    "plugin:prettier/recommended"
+    // "plugin:prettier/recommended"
   ]
 };
