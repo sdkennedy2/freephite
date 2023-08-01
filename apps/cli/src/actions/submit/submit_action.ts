@@ -54,9 +54,10 @@ export async function submitAction(
     args.reviewers = undefined;
 
     context.splog.info(
-      `Running in non-interactive mode. Inline prompts to fill PR fields will be skipped${!(args.draft || args.publish)
-        ? ' and new PRs will be created in draft mode'
-        : ''
+      `Running in non-interactive mode. Inline prompts to fill PR fields will be skipped${
+        !(args.draft || args.publish)
+          ? ' and new PRs will be created in draft mode'
+          : ''
       }.`
     );
     context.splog.newline();
@@ -145,7 +146,9 @@ export async function submitAction(
 
   const auth = context.userConfig.getFPAuthToken();
   if (!auth) {
-    throw new Error('No freephite auth token found. Run `fp auth-fp -t <YOUR_GITHUB_TOKEN>` then try again.');
+    throw new Error(
+      'No freephite auth token found. Run `fp auth-fp -t <YOUR_GITHUB_TOKEN>` then try again.'
+    );
   }
 
   const octokit = new Octokit({ auth });

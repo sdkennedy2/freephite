@@ -54,10 +54,10 @@ export async function submitPullRequest(
     state: 'OPEN', // We know this is not closed or merged because submit succeeded
     ...(pr.request.action === 'create'
       ? {
-        title: pr.request.title,
-        body: pr.request.body,
-        reviewDecision: 'REVIEW_REQUIRED', // Because we just opened this PR
-      }
+          title: pr.request.title,
+          body: pr.request.body,
+          reviewDecision: 'REVIEW_REQUIRED', // Because we just opened this PR
+        }
       : {}),
     ...(pr.request.draft !== undefined ? { draft: pr.request.draft } : {}),
   });
@@ -92,7 +92,9 @@ async function requestServerToSubmitPRs({
 }): Promise<TSubmittedPR[]> {
   const auth = context.userConfig.getFPAuthToken();
   if (!auth) {
-    throw new Error('No freephite auth token found. Run `fp auth-fp -t <YOUR_GITHUB_TOKEN>` then try again.');
+    throw new Error(
+      'No freephite auth token found. Run `fp auth-fp -t <YOUR_GITHUB_TOKEN>` then try again.'
+    );
   }
 
   const octokit = new Octokit({ auth });
