@@ -61,16 +61,17 @@ export async function getPrInfoToUpsert({
 }
 
 async function refreshPRInfo(): Promise<void> {
+  const loaded = prInfoConfigFactory.load();
+  // eslint-disable-next-line no-console
+  console.log('refreshPRInfo:', loaded);
   try {
     const prInfoToUpsert = await getPrInfoToUpsert({
       userConfig: userConfigFactory.load(),
       repoConfig: repoConfigFactory.load(),
     });
-    prInfoConfigFactory
-      .load()
-      .update((data) => (data.prInfoToUpsert = prInfoToUpsert));
+    loaded.update((data) => (data.prInfoToUpsert = prInfoToUpsert));
   } catch (err) {
-    prInfoConfigFactory.load().delete();
+    loaded.delete();
   }
 }
 
