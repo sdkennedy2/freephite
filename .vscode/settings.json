@@ -7,7 +7,7 @@
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
-},
+  },
   "files.exclude": {
     "**/.DS_Store": true,
     "**/.git": true,
@@ -15,15 +15,11 @@
   },
   "files.watcherExclude": {},
   "search.exclude": {
-    "**/.yarn": true,
     "**/.pnp.*": true
   },
-  "eslint.nodePath": ".yarn/sdks",
   "eslint.enable": true,
-  "eslint.packageManager": "yarn",
-  "eslint.validate": ["javascript","typescript"],
+  "eslint.validate": ["javascript", "typescript"],
   "typescript.preferences.importModuleSpecifier": "project-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "typescript.tsdk": ".yarn/sdks/typescript/lib",
-  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "typescript.enablePromptUseWorkspaceTsdk": true
 }
