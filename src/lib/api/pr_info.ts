@@ -34,6 +34,59 @@ export type TPRInfoToUpsert = t.UnwrapSchemaMap<
   typeof pullRequestInfoResponse
 >['prs'];
 
+async function fetchRemotePrs(
+  octokit: Octokit,
+  params: TRepoParams
+): Promise<Array<{ prNumber: number; branchName: string }>> {
+  const userResponse = await octokit.request('GET /user', {
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  });
+  const userName = userResponse?.data?.login;
+  if (!userName) {
+    throw new Error('Could not find authenticated user');
+  }
+
+  const searchQuery = [
+    'is:open',
+    'is:pr',
+    `author:${userName}`,
+    'archived:false',
+    `repo:${params.repoOwner}/${params.repoName}`,
+  ].join(' ');
+  const graphqlQuery = `
+  query Query {
+    search(
+      first: 100,
+      type:ISSUE,
+      query: "${searchQuery}"){
+        nodes {
+          ... on PullRequest {
+            headRefName
+            baseRefName
+            number
+          }
+        }
+      }
+  }`.trim();
+
+  const request = {
+    operationName: 'Query',
+    query: graphqlQuery,
+    variables: {},
+    headers: {
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  };
+  const response = await octokit.request('POST /graphql', request);
+  const issues = response?.data?.data?.search?.nodes ?? [];
+  return issues.map((issue: { number: number; headRefName: string }) => ({
+    prNumber: issue.number,
+    branchName: issue.headRefName,
+  }));
+}
+
 export async function getPrInfoForBranches(
   branchNamesWithExistingPrInfo: TBranchNameWithPrNumber[],
   params: TRepoParams,
@@ -58,6 +111,12 @@ export async function getPrInfoForBranches(
   }
 
   const octokit = new Octokit({ auth });
+
+  const remotePrs = await fetchRemotePrs(octokit, params);
+  for (const { branchName, prNumber } of remotePrs) {
+    existingPrInfo.set(prNumber, branchName);
+  }
+
   const requests = [];
 
   for (const pr of existingPrInfo.keys()) {

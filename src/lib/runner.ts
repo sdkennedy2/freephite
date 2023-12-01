@@ -156,6 +156,7 @@ async function graphiteHelper(
     } catch (persistError) {
       context.engine.clear();
       context.splog.debug(`Failed to persist Graphite cache`);
+      context.splog.debug(persistError.message);
     }
     handler.cacheLock.release();
   }
